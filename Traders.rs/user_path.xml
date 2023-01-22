@@ -1,0 +1,7 @@
+<model name="Traders">
+	<classpath>
+		<agents path="../bin" filter="Traders.agents.*"/>
+		<entry path="../bin" annotations="false"/>
+		<entry path="../lib" />
+	</classpath>
+</model>
