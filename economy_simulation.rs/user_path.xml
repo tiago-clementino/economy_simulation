@@ -1,6 +1,6 @@
-<model name="Traders">
+<model name="economy_simulation">
 	<classpath>
-		<agents path="../bin" filter="Traders.agents.*"/>
+		<agents path="../bin" filter="economy_simulation.agents.*"/>
 		<entry path="../bin" annotations="false"/>
 		<entry path="../lib" />
 	</classpath>

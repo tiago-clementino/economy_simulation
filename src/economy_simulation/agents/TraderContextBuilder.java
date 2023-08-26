@@ -1,14 +1,11 @@
-package Traders.agents;
+package economy_simulation.agents;
 
-import java.util.Iterator;
-
-import Traders.agents.enums.TraderType;
+import economy_simulation.transactions.TransactionType;
 import repast.simphony.context.Context;
 import repast.simphony.context.space.grid.GridFactoryFinder;
 import repast.simphony.dataLoader.ContextBuilder;
 import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.parameter.Parameters;
-import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridBuilderParameters;
 import repast.simphony.space.grid.RandomGridAdder;
 import repast.simphony.space.grid.WrapAroundBorders;
@@ -35,29 +32,28 @@ public class TraderContextBuilder implements ContextBuilder {
 		int gridWidth = (Integer)p.getValue("gridWidth");
 		int gridHeight = (Integer)p.getValue("gridHeight");
 		int initialTraders = (Integer)p.getValue("initialTraders");
-		double honestPercent = (Double)p.getValue("honestPercent");
-		
+		int totalTypes = (Integer)p.getValue("totalTypes");
+
 		GridFactoryFinder.createGridFactory(null).createGrid("Grid",
 				context, GridBuilderParameters.singleOccupancy2D(new RandomGridAdder(),
 								new WrapAroundBorders(), gridWidth, gridHeight));
 
-		for (int i=0; i<initialTraders; i+=3){
-			TraderType type = TraderType.ProteinProducer;
-			type.iamHonest(Math.random() <= honestPercent);
-			context.add(new Trader(type));
-		}
-
-		for (int i=1; i<initialTraders; i+=3){
-			TraderType type = TraderType.SuggarProducer;
-			type.iamHonest(Math.random() <= honestPercent);
-			context.add(new Trader(type));
+		TransactionType.reset();
+		
+		for (int k=0; k<totalTypes; k++){
+			new TransactionType();
 		}
 		
-		for (int i=2; i<initialTraders; i+=3){
-			TraderType type = TraderType.FatProducer;
-			type.iamHonest(Math.random() <= honestPercent);
-			context.add(new Trader(type));
+		for (int i=0; i<initialTraders; i++){
+			context.add(new Trader(TransactionType.getType(i%totalTypes)));
 		}
+		
+//		for (int j = 0; j < totalTypes; j++) {
+//			TransactionType type = new TransactionType();
+//			for (int i=j; i<initialTraders; i+=totalTypes){
+//				context.add(new Trader(type));
+//			}
+//		}
 		
 		timeIn  = System.currentTimeMillis();
 
@@ -70,25 +66,24 @@ public class TraderContextBuilder implements ContextBuilder {
 		int gridWidth = (Integer)p.getValue("gridWidth");
 		int gridHeight = (Integer)p.getValue("gridHeight");
 		int initialTraders = (Integer)p.getValue("initialTraders");
-		double honestPercent = (Double)p.getValue("honestPercent");
+		int totalTypes = (Integer)p.getValue("totalTypes");
 
-		for (int i=0; i<initialTraders; i+=3){
-			TraderType type = TraderType.ProteinProducer;
-			type.iamHonest(Math.random() <= honestPercent);
-			context.add(new Trader(type));
-		}
-
-		for (int i=1; i<initialTraders; i+=3){
-			TraderType type = TraderType.SuggarProducer;
-			type.iamHonest(Math.random() <= honestPercent);
-			context.add(new Trader(type));
+		TransactionType.reset();
+		
+		for (int k=0; k<totalTypes; k++){
+			new TransactionType();
 		}
 		
-		for (int i=2; i<initialTraders; i+=3){
-			TraderType type = TraderType.FatProducer;
-			type.iamHonest(Math.random() <= honestPercent);
-			context.add(new Trader(type));
+		for (int i=0; i<initialTraders; i++){
+			context.add(new Trader(TransactionType.getType(i%totalTypes)));
 		}
+
+//		for (int j = 0; j < totalTypes; j++) {
+//			TransactionType type = new TransactionType();
+//			for (int i=j; i<initialTraders; i+=totalTypes){
+//				context.add(new Trader(type));
+//			}
+//		}
 		
 		timeIn  = System.currentTimeMillis();
 

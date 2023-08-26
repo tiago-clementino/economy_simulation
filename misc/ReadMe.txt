@@ -1,1 +1,1 @@
-Place your misTraderaneous files in this directory.
+Place your miscellaneous files in this directory.
