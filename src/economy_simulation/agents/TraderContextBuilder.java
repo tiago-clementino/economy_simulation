@@ -1,5 +1,13 @@
 package economy_simulation.agents;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.util.Arrays;
+
 import economy_simulation.transactions.TransactionType;
 import repast.simphony.context.Context;
 import repast.simphony.context.space.grid.GridFactoryFinder;
@@ -24,6 +32,7 @@ import repast.simphony.space.grid.WrapAroundBorders;
 public class TraderContextBuilder implements ContextBuilder {
 
 	public static long timeIn = 0;
+	public static boolean firstRun = true;
 
 	@Override
 	public Context build(Context context) {
@@ -54,6 +63,28 @@ public class TraderContextBuilder implements ContextBuilder {
 //				context.add(new Trader(type));
 //			}
 //		}
+		
+		final Path timelinePath = Paths.get(Trader.TIMELINE_OUTPUT);
+		final Path dataPath = Paths.get(Trader.DATA_OUTPUT);
+	    try {
+	    	if(firstRun) {
+	    		StringBuilder data = new StringBuilder();
+		    	data.append("sucesso,memoria,tem_validador,typeAgnostic,securityDeposit,hasFeedback,feedbackPercent,");
+				data.append("honestidade,stepCount,totalTransactions,transactionFail,AvoidedFailTransactions,terminate");
+				Files.write(dataPath, Arrays.asList(data), StandardCharsets.UTF_8,
+					    Files.exists(dataPath) ? StandardOpenOption.APPEND : StandardOpenOption.CREATE);
+				
+				StringBuilder timeline = new StringBuilder();
+		    	timeline.append("run,hash,type,notMatch,memory,hasValidator,typeAgnostic,securityDeposit,hasFeedback,");
+		    	timeline.append("feedbackPercent,honestPercent,stepCount,totalTransactions,transactionFail,AvoidedFailTransactions");	    	
+				Files.write(timelinePath, Arrays.asList(timeline), StandardCharsets.UTF_8,
+				    Files.exists(timelinePath) ? StandardOpenOption.APPEND : StandardOpenOption.CREATE);
+				
+				firstRun = false;
+	    	}
+		} catch (IOException e) {}
+	    
+	    
 		
 		timeIn  = System.currentTimeMillis();
 

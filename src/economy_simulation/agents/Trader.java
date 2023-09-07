@@ -1,6 +1,7 @@
 package economy_simulation.agents;
 
 import java.io.IOException;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -16,6 +17,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.UUID;
 
 import org.apache.log4j.Logger;
 import org.apache.poi.util.SystemOutLogger;
@@ -24,6 +26,7 @@ import economy_simulation.transactions.Product;
 import economy_simulation.transactions.Transaction;
 import economy_simulation.transactions.TransactionType;
 import economy_simulation.utils.Random;
+import economy_simulation.utils.ValidatorException;
 import repast.simphony.context.Context;
 import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.engine.schedule.ScheduledMethod;
@@ -118,6 +121,8 @@ public class Trader {
 	private int rounds;
 	
 	private int totalTypes;
+	
+	private int initialTraders;
 
 	private boolean memory;
 
@@ -157,6 +162,16 @@ public class Trader {
 	private List<Product> allProducts;
 	
 	final static Logger logger = Logger.getLogger(Trader.class);
+
+	public static final String DATA_OUTPUT = "./data.csv";
+
+	public static final String TIMELINE_OUTPUT = "./timeline.csv";
+
+	private Integer hash;
+
+	private int AvoidedFailTransactions;
+	private static Integer nextHash = 0;
+	private static String run = null;
 	
 	public Trader(TransactionType type){
 		Parameters p = RunEnvironment.getInstance().getParameters();
@@ -178,6 +193,8 @@ public class Trader {
 		hasFeedback = (Boolean)p.getValue("hasFeedback");
 		feedbackPercent  = (Float)p.getValue("feedbackPercent");
 		totalTypes = (Integer)p.getValue("totalTypes");
+
+		initialTraders = (Integer)p.getValue("initialTraders");
 		
 		//nonHonests = new LinkedHashMap<Integer,Trader>();
 		//honests = new LinkedHashMap<Integer,Trader>();
@@ -207,7 +224,32 @@ public class Trader {
 		this.stepCount  = 0;
 		this.totalTransactions = 0;
 		this.transactionFail = 0;
+		this.AvoidedFailTransactions = 0;
 		this.notMatch = 0;
+		this.setHash();
+	}
+
+	public Integer getHash() {
+		return hash;
+	}
+
+	public String getRun() {
+		return run;
+	}
+
+	private void resetHash() {
+		nextHash = 0;
+		run = null;
+	}
+
+	private void setHash() {
+		if(nextHash == 0) {
+			if(run == null) {
+				run = UUID.randomUUID().toString();
+			}
+		}
+		this.hash = nextHash;
+		nextHash++;
 	}
 	
 	@ScheduledMethod(start=1, interval=1)
@@ -236,7 +278,14 @@ public class Trader {
 					reproduce();
 					this.balance = new HashMap<TransactionType,List<Product>>();
 					this.allProducts = new ArrayList<Product>();
-					this.stepCount = 0;
+					
+					//this.stepCount = 0;
+					
+					this.resetStep();
+					this.totalTransactions = 0;
+					this.transactionFail = 0;
+					this.AvoidedFailTransactions = 0;
+					this.notMatch = 0;
 					
 					// reset the reproduce counter
 					reproduceCounter = divideTime;
@@ -254,7 +303,8 @@ public class Trader {
 		// if the reproduce counter reaches 0
 		if (produceCounter == 0){
 
-			this.stepCount++;
+			//this.stepCount++;
+			this.stepAdd();
 			workout(type);
 			
 			
@@ -270,7 +320,7 @@ public class Trader {
 		else {
 			// continue waiting to reproduce
 			if(securityDeposit) {
-				this.stepCount++;
+				this.stepAdd();
 			}
 
 			produceCounter--;
@@ -278,6 +328,23 @@ public class Trader {
 			
 	}
 	
+	private void resetStep() {
+		//this.stepCount = 0;
+		this.setStep(0);
+	}
+
+	private void stepAdd() {
+		this.setStep(this.stepCount+1);
+		//this.stepCount++;
+	}
+
+	private void setStep(Integer step) {
+		this.stepCount = step;
+		//salvar linha em log
+		
+
+	}
+
 	private Long maxLife() {
 		return Math.round(maxFood * Math.pow(totalTypes, 4));
 	}
@@ -310,6 +377,37 @@ public class Trader {
 				notMatch++;
 			}
 		}
+		
+		if(Math.random() * initialTraders <= 0.0001) {
+			final Path path = Paths.get(TIMELINE_OUTPUT);
+		    try {
+		    	StringBuilder sb = new StringBuilder();
+		    	sb.append(run + ",");
+		    	sb.append(hash + ",");
+		    	sb.append(type.getHash() + ",");
+		    	sb.append(notMatch + ",");
+		    	
+		    	
+		    	
+		    	sb.append((memory?1:0) + ",");
+		    	sb.append((hasValidator?1:0) + ",");
+		    	sb.append((typeAgnostic?1:0) + ",");
+		    	sb.append((securityDeposit?1:0) + ",");
+		    	sb.append((hasFeedback?1:0) + ",");
+		    	sb.append(feedbackPercent + ",");
+		    	sb.append(honestPercent + ",");
+		    	sb.append(stepCount + ",");
+		    	sb.append(totalTransactions + ",");
+		    	sb.append(transactionFail + ",");
+		    	sb.append(AvoidedFailTransactions);
+		    	
+				Files.write(path, Arrays.asList(sb), StandardCharsets.UTF_8,
+				    Files.exists(path) ? StandardOpenOption.APPEND : StandardOpenOption.CREATE);
+				
+			} catch (IOException e) {}
+		}
+
+		
 	}
 
 	private void produce() {
@@ -355,10 +453,14 @@ public class Trader {
 	}
 
 	private void transfer(Transaction transaction) {
-		if(!transaction.pay(this)) {
-			transactionFail++;
-		}else {
-			totalTransactions++;
+		try {
+			if(!transaction.pay(this)) {
+				transactionFail++;
+			}else {
+				totalTransactions++;
+			}
+		} catch (ValidatorException e) {
+			AvoidedFailTransactions++;
 		}
 	}
 
@@ -468,6 +570,8 @@ public class Trader {
 					}else {
 						//System.out.println("quase quase");
 					}
+				} if (securityDeposit) {
+					return new Transaction(this,((Trader) trader),biggerStock,biggerPassiveStock);
 				}
 			}else {
 
@@ -575,12 +679,14 @@ public class Trader {
 		if(!typeAgnostic) {
 			List<Product> products = this.balance.get(type);
 			if(products != null && !products.isEmpty()) {
-				int position = Random.fraction(products.size()*feedbackPercent);
+				float size = hasFeedback?(products.size()-1)*feedbackPercent:(products.size()-1);
+				int position = Random.fraction(size);
 				return products.get(position).takeRandomOwner();
 			}
 		}else {
 			if(this != null && !this.allProducts.isEmpty()) {
-				int position = Random.fraction(this.allProducts.size()*feedbackPercent);
+				float size = hasFeedback?(this.allProducts.size()-1)*feedbackPercent:(this.allProducts.size()-1);
+				int position = Random.fraction(size);
 				return this.allProducts.get(position).takeRandomOwner();
 			}
 		}
@@ -691,6 +797,7 @@ public class Trader {
 			System.out.println("Passos (amostra): " + this.stepCount);
 			System.out.println("total de transacoes (amostra): " + this.totalTransactions);
 			System.out.println("total de transacoes mal sucedidas (amostra): " + this.transactionFail);
+			System.out.println("total de transacoes evitadas (amostra): " + this.AvoidedFailTransactions);
 			System.out.println("nao deu match (amostra): " + this.notMatch);
 			
 			double terminate = (System.currentTimeMillis() - TraderContextBuilder.timeIn) / 1000;
@@ -699,7 +806,7 @@ public class Trader {
 			System.out.println();
 			System.out.println();
 			
-			final Path path = Paths.get("./data.csv");
+			final Path path = Paths.get(DATA_OUTPUT);
 		    try {
 		    	StringBuilder sb = new StringBuilder();
 		    	sb.append("0,");
@@ -713,6 +820,7 @@ public class Trader {
 		    	sb.append(stepCount + ",");
 		    	sb.append(totalTransactions + ",");
 		    	sb.append(transactionFail + ",");
+		    	sb.append(AvoidedFailTransactions + ",");
 		    	sb.append(terminate );
 				Files.write(path, Arrays.asList(sb), StandardCharsets.UTF_8,
 				    Files.exists(path) ? StandardOpenOption.APPEND : StandardOpenOption.CREATE);
@@ -754,6 +862,7 @@ public class Trader {
 			System.out.println("Passos (amostra): " + this.stepCount);
 			System.out.println("total de transacoes (amostra): " + this.totalTransactions);
 			System.out.println("total de transacoes mal sucedidas (amostra): " + this.transactionFail);
+			System.out.println("total de transacoes evitadas (amostra): " + this.AvoidedFailTransactions);
 			System.out.println("nao deu match (amostra): " + this.notMatch);
 			
 			double terminate = (System.currentTimeMillis() - TraderContextBuilder.timeIn) / 1000;
@@ -762,7 +871,7 @@ public class Trader {
 			System.out.println();
 			System.out.println();
 			
-			final Path path = Paths.get("./data.csv");
+			final Path path = Paths.get(DATA_OUTPUT);
 		    try {
 		    	StringBuilder sb = new StringBuilder();
 		    	sb.append("1,");
@@ -776,6 +885,7 @@ public class Trader {
 		    	sb.append(stepCount + ",");
 		    	sb.append(totalTransactions + ",");
 		    	sb.append(transactionFail + ",");
+		    	sb.append(AvoidedFailTransactions + ",");
 		    	sb.append(terminate );
 				Files.write(path, Arrays.asList(sb), StandardCharsets.UTF_8,
 				    Files.exists(path) ? StandardOpenOption.APPEND : StandardOpenOption.CREATE);
@@ -785,6 +895,8 @@ public class Trader {
 					items.add(iterator.next());		
 					
 				}
+				this.resetHash();
+				TransactionType.reset();
 				if(!context.removeAll(items)) {
 					throw new RuntimeException("ERRADO");
 				}

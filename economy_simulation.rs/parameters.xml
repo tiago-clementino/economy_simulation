@@ -55,13 +55,13 @@
 									
 		/>
 				<parameter name="totalTypes" displayName="Total Types" type="int" 
-						defaultValue="30" 
+						defaultValue="20" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 									
 		/>
 				<parameter name="foodEnouth" displayName="Food Enouth" type="int" 
-						defaultValue="15" 
+						defaultValue="10" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 									
@@ -73,7 +73,7 @@
 									
 		/>
 				<parameter name="honestPercent" displayName="Honest Percent" type="float" 
-						defaultValue="0.9" 
+						defaultValue="0.5" 
 						isReadOnly="true" 
 						converter="repast.simphony.parameter.StringConverterFactory$FloatConverter"
 									
