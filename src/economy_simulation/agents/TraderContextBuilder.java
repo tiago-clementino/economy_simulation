@@ -70,7 +70,7 @@ public class TraderContextBuilder implements ContextBuilder {
 	    	if(firstRun) {
 	    		StringBuilder data = new StringBuilder();
 		    	data.append("sucesso,memoria,tem_validador,typeAgnostic,securityDeposit,hasFeedback,feedbackPercent,");
-				data.append("honestidade,stepCount,totalTransactions,transactionFail,AvoidedFailTransactions,terminate");
+				data.append("honestidade,stepCount,totalTransactions,transactionFail,AvoidedFailTransactions,uniqueValidators,terminate");
 				Files.write(dataPath, Arrays.asList(data), StandardCharsets.UTF_8,
 					    Files.exists(dataPath) ? StandardOpenOption.APPEND : StandardOpenOption.CREATE);
 				

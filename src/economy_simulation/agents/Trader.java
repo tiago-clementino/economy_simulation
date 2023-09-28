@@ -172,6 +172,8 @@ public class Trader {
 	private int AvoidedFailTransactions;
 	private static Integer nextHash = 0;
 	private static String run = null;
+
+	private static HashMap<Integer, Trader> uniqueValidators;
 	
 	public Trader(TransactionType type){
 		Parameters p = RunEnvironment.getInstance().getParameters();
@@ -187,8 +189,7 @@ public class Trader {
 		//dontKnowTheValidator = (Boolean)p.getValue("dontKnowTheValidator");
 		typeAgnostic = (Boolean)p.getValue("typeAgnostic");
 		hasValidator = (Boolean)p.getValue("hasValidator");
-		honestPercent  = (Float)p.getValue("honestPercent");
-		//myHonest = Math.random() <= honestPercent
+		honestPercent  = (Float)p.getValue("honestPercent"); 
 		securityDeposit = (Boolean)p.getValue("securityDeposit");
 		hasFeedback = (Boolean)p.getValue("hasFeedback");
 		feedbackPercent  = (Float)p.getValue("feedbackPercent");
@@ -204,6 +205,7 @@ public class Trader {
 		}
 		balance = new HashMap<TransactionType,List<Product>>();
 		backup = new HashMap<TransactionType,List<Product>>();
+		uniqueValidators = new HashMap<Integer,Trader>();
 		allProducts = new ArrayList<Product>();
 		// Set the initial move and divide times according to the specified parameters
 		// and sampled from a Uniform distribution.
@@ -227,6 +229,13 @@ public class Trader {
 		this.AvoidedFailTransactions = 0;
 		this.notMatch = 0;
 		this.setHash();
+	}
+
+	public Trader(TransactionType type, HashMap<TransactionType, Boolean> honestRates) {
+		this(type);
+		if(honestRates != null) {
+			this.myHonest = honestRates;
+		}
 	}
 
 	public Integer getHash() {
@@ -566,6 +575,7 @@ public class Trader {
 					Trader validator = takeBestValidator(((Trader) trader),biggerPassiveStock);//take the best or someone random
 					if(validator != null) {
 						//System.out.println("quase");
+						setUniqueValidators(validator);
 						return new Transaction(this,((Trader) trader),biggerStock,biggerPassiveStock,validator);
 					}else {
 						//System.out.println("quase quase");
@@ -579,6 +589,17 @@ public class Trader {
 			}
 		}
 		return null;
+	}
+
+	public static void setUniqueValidators(Trader validator) {
+		Trader val = null;
+		if(validator != null && (val = uniqueValidators.get(validator.getHash())) == null) {
+			uniqueValidators.put(validator.getHash(),validator);
+		}
+	}
+	
+	public void resetUniqueValidators() {
+		uniqueValidators = new HashMap<Integer,Trader>();
 	}
 
 	/**
@@ -622,7 +643,10 @@ public class Trader {
 		if(honest) {
 			//quanto mais tempo de vida, maior a chance de agir honestamente
 			//quanto mais do produto negociado, maior a chance de agir honestamente
-			return  ((this.stepCount/maxLife())+1-(products.size()/maxFood))/2 <= Math.random();
+			//return  ((this.stepCount/(maxLife()*2))+1-((products.size()*2)/maxFood))/2 <= Math.random();
+			//return  (this.stepCount/(maxLife())+1-(products.size()/maxFood))/2 <= Math.random();
+			return  ((this.stepCount/(maxLife())/2)+1-(products.size()/maxFood))/2 <= Math.random();
+			//return true;
 		}
 		return false;
 	}
@@ -691,7 +715,7 @@ public class Trader {
 			}
 		}
 		
-		return null;
+		return whateverOne(type);
 		
 		
 //		int end = Random.fraction(honests.size());
@@ -704,6 +728,21 @@ public class Trader {
 //			}
 //		}		
 //		return null;
+	}
+
+	private Trader whateverOne(TransactionType type2) {
+		// TODO Auto-generated method stub
+		Context context = ContextUtils.getContext(this);
+		Trader trader = null;
+		Double random = Math.random();
+		for (Iterator iterator = context.iterator(); iterator.hasNext();) {
+			trader = (Trader)iterator.next();
+			if(trader.getType().equals(type2) && random > Math.random()) {
+				return trader;
+			}
+			
+		}
+		return null;
 	}
 
 //	public void setNonHonest(Trader validator) {
@@ -821,10 +860,14 @@ public class Trader {
 		    	sb.append(totalTransactions + ",");
 		    	sb.append(transactionFail + ",");
 		    	sb.append(AvoidedFailTransactions + ",");
+		    	sb.append(uniqueValidators.size() + ",");
 		    	sb.append(terminate );
 				Files.write(path, Arrays.asList(sb), StandardCharsets.UTF_8,
 				    Files.exists(path) ? StandardOpenOption.APPEND : StandardOpenOption.CREATE);
-				
+
+				this.resetHash();
+				resetUniqueValidators();
+				TransactionType.reset();
 				RunEnvironment.getInstance().endRun();
 				//RunEnvironment.getInstance().resumeRun();
 			    //TraderContextBuilder.rebuild(context);
@@ -834,7 +877,7 @@ public class Trader {
 
 		}
 	}
-	
+
 	/**
 	 * Produce a daughter Trader and move it to an empty adjacent site.
 	 */
@@ -844,7 +887,7 @@ public class Trader {
 		
 		TransactionType type = this.type;
 		//type.iamHonest(Math.random() <= honestPercent);
-		Trader trader = new Trader(this.type);	
+		Trader trader = new Trader(this.type, this.getHonestRates());	
 		context.add(trader);
 		
 		if(context.size() >= 1000) {
@@ -886,6 +929,7 @@ public class Trader {
 		    	sb.append(totalTransactions + ",");
 		    	sb.append(transactionFail + ",");
 		    	sb.append(AvoidedFailTransactions + ",");
+		    	sb.append(uniqueValidators.size() + ",");
 		    	sb.append(terminate );
 				Files.write(path, Arrays.asList(sb), StandardCharsets.UTF_8,
 				    Files.exists(path) ? StandardOpenOption.APPEND : StandardOpenOption.CREATE);
@@ -896,6 +940,7 @@ public class Trader {
 					
 				}
 				this.resetHash();
+				resetUniqueValidators();
 				TransactionType.reset();
 				if(!context.removeAll(items)) {
 					throw new RuntimeException("ERRADO");
@@ -921,6 +966,10 @@ public class Trader {
 		
 	}
 	
+	private HashMap<TransactionType,Boolean> getHonestRates() {
+		return this.myHonest;
+	}
+
 	/**
 	 * Provides a list of adjacent (unoccupied) sites in the Trader's Moore 
 	 * neighborhood.  The list of sites is shuffled.
@@ -996,15 +1045,15 @@ public class Trader {
 //		}
 	}
 
-	public List<Product> takeBatch() {
-		return takeUnit(batch);
+	public List<Product> takeBatch(TransactionType type) {
+		return takeUnit(type,batch);
 	}
 
-	public List<Product> takeUnit() {
-		return takeUnit(1);
+	public List<Product> takeUnit(TransactionType type) {
+		return takeUnit(type,1);
 	}
 
-	public List<Product> takeUnit(int unit) {
+	public List<Product> takeUnit(TransactionType type, int unit) {
 		
 		List<Product> products = this.balance.get(type);
 		List<Product> returnProducts = new ArrayList<Product>();

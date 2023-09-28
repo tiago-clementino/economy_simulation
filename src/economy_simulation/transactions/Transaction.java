@@ -53,9 +53,9 @@ public class Transaction {
 
 	public void transfer(Trader payer,Trader receiver,TransactionType type, boolean batch) {
 		if(batch) {
-			receiver.addProduct(type,payer.takeBatch());
+			receiver.addProduct(type,payer.takeBatch(type));
 		}else {
-			receiver.addProduct(type,payer.takeUnit());
+			receiver.addProduct(type,payer.takeUnit(type));
 		}
 	}
 
