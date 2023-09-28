@@ -1,0 +1,6 @@
+#
+#Tue Aug 22 15:01:03 BRT 2023
+incoming=tcp\://127.0.0.1\:5555
+outgoing=tcp\://127.0.0.1\:5556
+scenario=..\\economy_simulation.rs
+working.directory=../

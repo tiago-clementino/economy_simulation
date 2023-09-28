@@ -3,13 +3,13 @@
   <type>2D</type>
   <styles>
     <entry>
-      <string>Traders.agents.Trader</string>
-      <string>Traders.styles.TraderStyle2D</string>
+      <string>economy_simulation.agents.Trader</string>
+      <string>economy_simulation.styles.TraderStyle2D</string>
     </entry>
   </styles>
   <editedStyles>
     <entry>
-      <string>Traders.agents.Trader</string>
+      <string>economy_simulation.agents.Trader</string>
       <null/>
     </entry>
   </editedStyles>
@@ -29,7 +29,7 @@
   <layoutInterval>0</layoutInterval>
   <layerOrder>
     <entry>
-      <string>Traders.agents.Trader</string>
+      <string>economy_simulation.agents.Trader</string>
       <int>0</int>
     </entry>
   </layerOrder>

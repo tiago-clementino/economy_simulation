@@ -40,7 +40,7 @@
     	<echo message="Output file: ${output_file}"/>
         
         <!-- A hidden staging dirctory to store the install files that will be deleted at cleanup -->
-		<property name="StagingArea" value="./.temp/Traders" />
+		<property name="StagingArea" value="./.temp/economy_simulation" />
 		<echo message="StagingArea = ${StagingArea}" />
 
 		<!-- Clear the temporary staging area -->
@@ -76,7 +76,7 @@
         <!-- Create the zip archive -->
         <zip destfile="${output_file}">	
         	<!-- Include the complete model folder -->
-			<zipfileset dir="." includes="**/*" prefix="Traders"/>
+			<zipfileset dir="." includes="**/*" prefix="economy_simulation"/>
 			
 			<!-- Copy the run scripts to the root of the zip archive -->
 			<zipfileset dir="${StagingArea}" includes="start_model.bat"/>

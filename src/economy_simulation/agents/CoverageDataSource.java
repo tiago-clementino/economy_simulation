@@ -1,7 +1,7 @@
 /**
  * 
  */
-package Traders.agents;
+package economy_simulation.agents;
 
 import repast.simphony.context.Context;
 import repast.simphony.data2.AggregateDataSource;

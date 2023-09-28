@@ -398,7 +398,7 @@ itext
      all U.S. Government End Users acquire Covered Code with only those
      rights set forth herein.
 
-11. MISTraderANEOUS.
+11. MISCELLANEOUS.
 
      This License represents the complete agreement concerning subject
      matter hereof. If any provision of this License is held to be

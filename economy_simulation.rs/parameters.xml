@@ -19,7 +19,7 @@
 									
 		/>
 				<parameter name="moveTimeMax" displayName="Move Time Max" type="int" 
-						defaultValue="5" 
+						defaultValue="3" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 									
@@ -30,8 +30,14 @@
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 									
 		/>
+				<parameter name="typeAgnostic" displayName="Transaction Type Agnostic" type="boolean" 
+						defaultValue="false" 
+						isReadOnly="false" 
+						converter="repast.simphony.parameter.StringConverterFactory$BooleanConverter"
+									
+		/>
 				<parameter name="divideTimeMax" displayName="Divide Time Max" type="int" 
-						defaultValue="30" 
+						defaultValue="25" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 									
@@ -48,8 +54,14 @@
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 									
 		/>
+				<parameter name="totalTypes" displayName="Total Types" type="int" 
+						defaultValue="20" 
+						isReadOnly="false" 
+						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
+									
+		/>
 				<parameter name="foodEnouth" displayName="Food Enouth" type="int" 
-						defaultValue="150" 
+						defaultValue="10" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 									
@@ -60,10 +72,10 @@
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 									
 		/>
-				<parameter name="honestPercent" displayName="Honest Percent" type="double" 
+				<parameter name="honestPercent" displayName="Honest Percent" type="float" 
 						defaultValue="0.5" 
 						isReadOnly="true" 
-						converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter"
+						converter="repast.simphony.parameter.StringConverterFactory$FloatConverter"
 									
 		/>
 				<parameter name="rounds" displayName="Tarnsaction rounds" type="int" 
@@ -79,15 +91,33 @@
 									
 		/>
 				<parameter name="hasValidator" displayName="If validator is demanded" type="boolean" 
-						defaultValue="false" 
-						isReadOnly="true" 
+						defaultValue="true" 
+						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$BooleanConverter"
 									
 		/>
-				<parameter name="dontKnowTheValidator" displayName="If all validator are honest or not" type="boolean" 
+				<parameter name="securityDeposit" displayName="If it uses security deposit" type="boolean" 
 						defaultValue="false" 
-						isReadOnly="true" 
+						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$BooleanConverter"
+									
+		/>
+				<parameter name="hasFeedback" displayName="If feedback is demanded" type="boolean" 
+						defaultValue="false" 
+						isReadOnly="false" 
+						converter="repast.simphony.parameter.StringConverterFactory$BooleanConverter"
+									
+		/>
+				<parameter name="feedbackPercent" displayName="If it demands feedback, set the feedback percent rate" type="float" 
+						defaultValue="0.1" 
+						isReadOnly="false" 
+						converter="repast.simphony.parameter.StringConverterFactory$FloatConverter"
+									
+		/>
+				<parameter name="securityDepositSucess" displayName="If it demands security deposit set the security deposit sucess" type="float" 
+						defaultValue="0.4" 
+						isReadOnly="false" 
+						converter="repast.simphony.parameter.StringConverterFactory$FloatConverter"
 									
 		/>
 		</parameters>
