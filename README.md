@@ -11,10 +11,10 @@ This work proposes solutions to encourage honesty among agents in non-verifiable
 
 | Solution features | A | B | C | D | E | F | G | H | I |
 |-------------------|---|---|---|---|---|---|---|---|---|
-| Arbitrator | X | X |   |   | X | X |   |   |   |
-| Categories | X |   | X |   | X |   | X |   |   |
-| Security Deposit |   |   | X | X |   |   | X | X |   |
-| Feedback |   |   |   |   | X | X | X | X |   |
+| Arbitrator        | X | X |   |   | X | X |   |   |   |
+| Categories        | X |   | X |   | X |   | X |   |   |
+| Security Deposit  |   |   | X | X |   |   | X | X |   |
+| Feedback          |   |   |   |   | X | X | X | X |   |
 
 Table 1. Proposed Solutions (A, B, C, E and G) and Solutions from the Literature - D; F; and, H.
 
