@@ -1,6 +1,5 @@
-# Analysing the Effectiveness of Honesty Stimulating Solutions in Online Decentralized Markets
-## An Agent-based Simulation Comparison
-
+# Analysing the Effectiveness of Honesty Stimulating Solutions in Online Decentralized Markets - An Agent-based Simulation Comparison
+## SIMULATION CODE
 
 Online transactions involve protocols of exchange of values where an active party usually prepays for goods or services. The passive party may act dishonestly and never deliver the paid for goods or services. Incomplete transactions cause multi-billion dollars losses annually just for e-commerce. Centralized markets bypass this problem with a centralized intermediary auditor - e.g., Amazon.com. For decentralized markets - e.g., OpenBazaar - literature and practice have typically adopted solutions built around security deposits, reputation systems, or decentralized arbitrators. This article carries out a comparison, by means of agent-based simulation (ABS), among such decentralized solutions in the literature and also, our proposals for suitable combinations of their main features. One of the proposed combinations offers superior performance in terms of transactions completion rate (success), even with high rates of dishonesty among the population. The article contributes to ABS applications to the prototyping of decentralized transaction protocols in untrustworthy online environments.
 
@@ -66,3 +65,7 @@ Overall, 63% of the total number of simulation runs resulted in success for the 
 Table 2. Population success estimation for each compared solution in Table 1.
 
 Looking more closely at Table 2, we see that no solution presents any success for an honesty rate less than or equal to 0.2 (20%), and all present perfect performances for honesty rates greater than or equal to 0.7 (70%). Actual competition among the compared solutions occurs only in the range of honesty rates from 0.3 (30%) to 0.6 (60%), a fact that in itself demonstrates an open potential for the improvement of transaction validation solutions containing non-verifiable operations. In the competition range, 'A' demonstrates significant dominance over the others. This indicates that there may be a transaction verification solution capable of satisfactorily stimulating agents’ honesty when the overall population's honesty rate equals or exceeds 30%.
+
+## HOW TO DO
+
+TODO
