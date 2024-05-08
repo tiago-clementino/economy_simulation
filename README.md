@@ -25,3 +25,22 @@ Table 1. Proposed Solutions (A, B, C, E and G) and Solutions from the Literature
 
 #### Methodology
 
+The hypothesis to be tested here points to the fact that it is possible to encourage honesty using decentralized solutions even in the presence of non-verifiable operations. The objective is to identify superior honesty incentive strategies that, even without verifying the operations, are capable of rewarding and encouraging honesty in a population of agents with diverse categories of values exchanged and honesty profiles. To this end, Agent-Based Simulation~(ABS) was used to record the effectiveness of each agent separately and of the population as a whole through multiple simulations runs for different configurations of mutually exclusive solutions at different honesty rates.
+
+#### Simulation Design
+
+An Agent-Based Simulation (ABS) of decentralized markets where agents produce and trade values according to the applied solution was performed. In addition to reproducing such interactions, parameters such as honesty, memory, risk, bankruptcy and success were incorporated. 
+
+The simulation environment consists of a $256\times 256$ 2D Grid, containing an initial total of 100 agents that may grow to a maximum of 1,000 agents as the simulation run progresses. 
+
+### SIMULATION RESULTS
+
+For each solution in Table 1, the population's performance, the success of the simulated economy and the effectiveness of the solutions in avoiding unsuccessful transactions are presented.
+
+#### Format and Metrics
+
+The dataset resulting from multiple runs of the ABS comprises two distinct tables: one containing data for each final record of every run, and the other containing a random sampling of various sequential states of the agent population throughout the simulation. The table documenting final records of each simulation run has as result only one key field, a Boolean indicating the success or failure of each simulation (based on whether all agents perish or not, before the completion of the simulation run).
+
+Similarly, the table capturing partial simulation records throughout the process includes three primary fields: a proportional balance of unsuccessful transactions up to that point, the total balance of unsuccessful transactions avoided by the employed solution, and the proportional balance of successful transactions. The experiment consisted of 81,000 simulation runs across nine distinct honesty rates in {0.1, 0.2, ..,0.9}.
+
+Analysis of the data revealed a density curve resembling a normal distribution for the population's average success rate. Statistical inference, employing confidence intervals of 95% certainty level, was utilized to assess the success of the population and the diversity of agents. Furthermore, a Spearman correlation analysis was conducted to examine the relationship between the total number of unsuccessful transactions avoided and total failures at each simulation time step, across the various tested solutions.
