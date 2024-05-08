@@ -44,3 +44,25 @@ The dataset resulting from multiple runs of the ABS comprises two distinct table
 Similarly, the table capturing partial simulation records throughout the process includes three primary fields: a proportional balance of unsuccessful transactions up to that point, the total balance of unsuccessful transactions avoided by the employed solution, and the proportional balance of successful transactions. The experiment consisted of 81,000 simulation runs across nine distinct honesty rates in {0.1, 0.2, ..,0.9}.
 
 Analysis of the data revealed a density curve resembling a normal distribution for the population's average success rate. Statistical inference, employing confidence intervals of 95% certainty level, was utilized to assess the success of the population and the diversity of agents. Furthermore, a Spearman correlation analysis was conducted to examine the relationship between the total number of unsuccessful transactions avoided and total failures at each simulation time step, across the various tested solutions.
+
+
+#### Economics Performance
+
+Overall, 63% of the total number of simulation runs resulted in success for the population. Solution 'A' achieved 74% success across the entire experiment, 'I' without any form of transaction verification achieved 49% success. The performance of each compared solution across the range of honesty rate values is presented in Table 2 below.
+
+
+|  Solutions  | 10% | 20% |  30% |  40% |   50% |   60% |   70% |   80% |   90% |
+|-------------|-----|-----|------|------|-------|-------|-------|-------|-------|
+| A           | 0.0 | 0.0 | 41.7 | 88.9 | 100.0 | 100.0 | 100.0 | 100.0 | 100.0 |
+| B           | 0.0 | 0.0 | 22.2 | 62.5 |  90.0 |  91.7 | 100.0 | 100.0 | 100.0 |
+| C           | 0.0 | 0.0 |  9.1 | 36.4 |  81.8 | 100.0 | 100.0 | 100.0 | 100.0 |
+| D           | 0.0 | 0.0 |  0.0 | 66.7 |  81.8 | 100.0 | 100.0 | 100.0 | 100.0 |
+| E           | 0.0 | 0.0 | 18.2 | 54.5 |  90.0 | 100.0 | 100.0 | 100.0 | 100.0 |
+| F           | 0.0 | 0.0 | 12.5 | 40.0 |  70.0 | 100.0 | 100.0 | 100.0 | 100.0 |
+| G           | 0.0 | 0.0 |  0.0 | 54.5 |  77.8 |  87.5 | 100.0 | 100.0 | 100.0 |
+| H           | 0.0 | 0.0 | 16.7 | 60.0 |  63.6 | 100.0 | 100.0 | 100.0 | 100.0 |
+| I           | 0.0 | 0.0 |  0.0 | 30.0 |  60.0 | 100.0 | 100.0 | 100.0 | 100.0 |
+
+Table 2. Population success estimation for each compared solution in Table 1.
+
+Looking more closely at Table 2, we see that no solution presents any success for an honesty rate less than or equal to 0.2 (20%), and all present perfect performances for honesty rates greater than or equal to 0.7 (70%). Actual competition among the compared solutions occurs only in the range of honesty rates from 0.3 (30%) to 0.6 (60%), a fact that in itself demonstrates an open potential for the improvement of transaction validation solutions containing non-verifiable operations. In the competition range, 'A' demonstrates significant dominance over the others. This indicates that there may be a transaction verification solution capable of satisfactorily stimulating agents’ honesty when the overall population's honesty rate equals or exceeds 30%.
