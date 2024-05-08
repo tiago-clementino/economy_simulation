@@ -9,8 +9,9 @@ Online transactions involve protocols of exchange of values where an active part
 
 This work proposes solutions to encourage honesty among agents in non-verifiable transactions. To this end, one or more features of solutions from literature are combined in each proposed solution. The collection of said multiple- and single-featured solutions form a super set of honesty-incentive solutions that include features of honesty inference or guarantee for non-verifiable transactions. The performances of the solutions in this super set are then compared and ranked according to their effectiveness (i.e., their capacity to stimulate honesty and hence, improve transactions completion rate – “success”). Table below specifies the features of all solutions in the super set being considered.
 
-|   |   |   |   |   |
+| Solution features | A | B  | C | D | E | F | G | H | I |
 |---|---|---|---|---|
-|   |   |   |   |   |
-|   |   |   |   |   |
-|   |   |   |   |   |
+| Arbitrator | X | X |   |   | X | X |   |   |   |
+| Categories | X |   | X |   | X |   | X |   |   |
+| Security Deposit |   |   | X | X |   |   | X | X |   |
+| Feedback |   |   |   |   | X | X | X | X |   |
